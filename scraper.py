@@ -1,4 +1,5 @@
 import requests
+import pandas as pd
 from bs4 import BeautifulSoup
 
 def fetch_page(url):
@@ -12,9 +13,14 @@ def parse_html(html):
     items = soup.find_all('div', class_='item')
     return [item.text for item in items]
 
+def export_to_csv(data, filename):
+    df = pd.DataFrame(data, columns=['ItemName'])
+    df.to_csv(filename, index=False)
+    print(f'Exported to {filename}')
+
 if __name__ == '__main__':
     print('Starting scraper...')
     html = fetch_page('http://example.com')
     if html:
         data = parse_html(html)
-        print(f'Found {len(data)} items')
+        export_to_csv(data, 'output.csv')
